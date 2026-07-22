@@ -13,6 +13,7 @@
   --color-border: oklch(0.25 0.013 43);
   --color-primary: oklch(0.74 0.13 43);
   --color-primary-hover: oklch(0.8 0.15 43);
+  --color-destructive: oklch(0.55 0.18 25);
 
   /* Spacing */
   --space-section: clamp(3rem, 5vw + 1rem, 5.5rem);
@@ -76,8 +77,26 @@
     text-underline-offset: 0.2em;
   }
 
+  .text-link:focus-visible {
+    outline: none;
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
   .focus-ring {
     @apply outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
     outline-color: var(--color-primary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

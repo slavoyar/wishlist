@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import { formatPrice } from '@/lib/format';
 import type { WishlistItem } from '@/lib/db/queries';
 import { cn } from '@/lib/utils';
@@ -11,12 +13,14 @@ type WishlistItemCardProps = {
 export function WishlistItemCard({ item, isEditing = false, actions }: WishlistItemCardProps) {
   const bought = item.status === 'bought';
   const priceLabel = formatPrice(item.price, item.currency);
+  const statusLabel = bought ? 'куплено' : 'хочу';
 
   return (
     <article
+      aria-label={`${item.name}, ${statusLabel}`}
       className={cn(
         'relative overflow-hidden border-b border-border py-8 last:border-b-0',
-        bought && 'opacity-50',
+        bought && 'opacity-80',
       )}
     >
       {bought && (
@@ -31,12 +35,13 @@ export function WishlistItemCard({ item, isEditing = false, actions }: WishlistI
       )}
 
       <div className={cn('grid gap-5 sm:grid-cols-[160px_minmax(0,1fr)]', bought && 'pointer-events-none select-none')}>
-        <div className="relative h-40 w-40 shrink-0 overflow-hidden rounded-md bg-surface sm:h-[160px] sm:w-[160px]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-surface sm:aspect-auto sm:h-[160px] sm:w-[160px] sm:shrink-0">
+          <Image
             src={item.imageUrl}
             alt={item.name}
-            className={cn('h-full w-full object-cover', bought && 'grayscale')}
+            fill
+            sizes="(max-width: 639px) 100vw, 160px"
+            className={cn('object-cover', bought && 'grayscale')}
           />
         </div>
 
@@ -49,7 +54,7 @@ export function WishlistItemCard({ item, isEditing = false, actions }: WishlistI
           {item.notes && <p className="text-pretty text-body text-copy">{item.notes}</p>}
 
           {item.links.length > 0 && (
-            <ul className="flex flex-wrap gap-x-4 gap-y-2">
+            <ul className="flex flex-wrap gap-x-4 gap-y-3">
               {item.links.map((link) => (
                 <li key={link.id}>
                   {bought ? (
@@ -59,7 +64,7 @@ export function WishlistItemCard({ item, isEditing = false, actions }: WishlistI
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-link focus-ring"
+                      className="text-link inline-flex min-h-11 items-center px-1 py-2"
                     >
                       {link.label}
                     </a>
