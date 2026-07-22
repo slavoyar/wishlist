@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 import { formatPrice } from '@/lib/format';
 import type { WishlistItem } from '@/lib/db/queries';
 import { cn } from '@/lib/utils';
@@ -18,7 +16,7 @@ export function WishlistItemCard({ item, isEditing = false, actions }: WishlistI
     <article
       className={cn(
         'relative overflow-hidden border-b border-border py-8 last:border-b-0',
-        bought && 'opacity-55',
+        bought && 'opacity-50',
       )}
     >
       {bought && (
@@ -32,15 +30,13 @@ export function WishlistItemCard({ item, isEditing = false, actions }: WishlistI
         </div>
       )}
 
-      <div className={cn('grid gap-5 sm:grid-cols-[160px_1fr]', bought && 'pointer-events-none select-none')}>
-        <div className="relative aspect-square overflow-hidden rounded-md bg-surface">
-          <Image
+      <div className={cn('grid gap-5 sm:grid-cols-[160px_minmax(0,1fr)]', bought && 'pointer-events-none select-none')}>
+        <div className="relative h-40 w-40 shrink-0 overflow-hidden rounded-md bg-surface sm:h-[160px] sm:w-[160px]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={item.imageUrl}
             alt={item.name}
-            fill
-            className={cn('object-cover', bought && 'grayscale')}
-            sizes="160px"
-            unoptimized
+            className={cn('h-full w-full object-cover', bought && 'grayscale')}
           />
         </div>
 
