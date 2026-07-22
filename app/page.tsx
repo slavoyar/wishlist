@@ -1,16 +1,21 @@
+import { AuthControls } from '@/components/auth-controls';
 import { WishlistItemCard } from '@/components/wishlist-item-card';
+import { isAuthenticated } from '@/lib/auth';
 import { getWishlistItems } from '@/lib/db/queries';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  const items = await getWishlistItems();
+  const [items, authenticated] = await Promise.all([getWishlistItems(), isAuthenticated()]);
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-5 py-[var(--space-section)] sm:px-8">
-      <header className="mb-10 flex flex-col gap-3">
-        <p className="font-display text-display font-semibold text-ink">Wishlist</p>
-        <p className="text-prose text-body-lg">Вещи, которые я планирую купить.</p>
+      <header className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-3">
+          <p className="font-display text-display font-semibold text-ink">Wishlist</p>
+          <p className="text-prose text-body-lg">Вещи, которые я планирую купить.</p>
+        </div>
+        <AuthControls authenticated={authenticated} />
       </header>
 
       <section>
@@ -26,6 +31,10 @@ export default async function HomePage() {
           </div>
         )}
       </section>
+
+      {authenticated && (
+        <p className="mt-8 text-sm text-muted">Режим редактирования активен. Управление позициями появится дальше.</p>
+      )}
     </main>
   );
 }
