@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Color — warm near-black surface, coral accent (restrained) */
+  --color-bg: oklch(0.11 0.009 43);
+  --color-surface: oklch(0.16 0.012 43);
+  --color-ink: oklch(0.94 0.006 43);
+  --color-body: oklch(0.82 0.01 43);
+  --color-muted: oklch(0.67 0.012 43);
+  --color-faint: oklch(0.56 0.011 43);
+  --color-border: oklch(0.25 0.013 43);
+  --color-primary: oklch(0.74 0.13 43);
+  --color-primary-hover: oklch(0.8 0.15 43);
+
+  /* Spacing */
+  --space-section: clamp(3rem, 5vw + 1rem, 5.5rem);
+  --space-entry: clamp(1.75rem, 3vw, 2.5rem);
+  --space-header: clamp(1rem, 1.5vw + 0.25rem, 1.375rem);
+  --max-prose: 65ch;
+
+  /* Type scale */
+  --text-display: clamp(1.75rem, 2.5vw + 1rem, 2.75rem);
+  --text-heading: clamp(1.25rem, 1.5vw + 0.75rem, 1.625rem);
+  --text-subheading: 1.125rem;
+  --text-body: 1rem;
+  --text-body-lg: 1.125rem;
+  --text-sm: 0.875rem;
+  --text-xs: 0.8125rem;
+
+  --leading-display: 1.12;
+  --leading-heading: 1.22;
+  --leading-body: 1.65;
+  --leading-snug: 1.35;
+
+  --tracking-display: -0.025em;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-bg font-body text-body text-copy antialiased;
+    font-kerning: normal;
+    font-optical-sizing: auto;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display text-ink;
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .section-heading {
+    @apply font-display text-heading font-semibold text-ink;
+    text-wrap: balance;
+  }
+
+  .text-prose {
+    @apply max-w-[var(--max-prose)] text-pretty text-body text-copy;
+  }
+
+  .text-link {
+    @apply text-sm font-medium text-primary transition-colors duration-150;
+  }
+
+  .text-link:hover {
+    color: var(--color-primary-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .focus-ring {
+    @apply outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+    outline-color: var(--color-primary);
+  }
+}
