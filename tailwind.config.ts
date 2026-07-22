@@ -24,7 +24,7 @@ const config: Config = {
         'secondary-foreground': 'var(--color-ink)',
         accent: 'var(--color-surface)',
         'accent-foreground': 'var(--color-primary)',
-        destructive: 'oklch(0.55 0.18 25)',
+        destructive: 'var(--color-destructive)',
         'destructive-foreground': 'var(--color-ink)',
         input: 'var(--color-border)',
         ring: 'var(--color-primary)',

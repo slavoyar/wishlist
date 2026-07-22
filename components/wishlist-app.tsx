@@ -151,11 +151,15 @@ export function WishlistApp({ items, authenticated }: WishlistAppProps) {
     });
   }
 
+  const wantedItems = items.filter((entry) => entry.status === 'wanted');
+  const wantedIndexById = new Map(wantedItems.map((entry, index) => [entry.id, index] as const));
+  const wantedCount = wantedItems.length;
+
   return (
     <>
       <header className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-col gap-3">
-          <p className="font-display text-display font-semibold text-ink">Wishlist</p>
+          <h1 className="font-display text-display font-semibold text-ink">Wishlist</h1>
           <p className="text-prose text-body-lg">Вещи, которые я планирую купить.</p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -184,8 +188,7 @@ export function WishlistApp({ items, authenticated }: WishlistAppProps) {
         ) : (
           <div className="border-t border-border">
             {items.map((item) => {
-              const wantedItems = items.filter((entry) => entry.status === 'wanted');
-              const wantedIndex = wantedItems.findIndex((entry) => entry.id === item.id);
+              const wantedIndex = wantedIndexById.get(item.id) ?? -1;
               const canMove = item.status === 'wanted';
 
               return (
@@ -207,10 +210,10 @@ export function WishlistApp({ items, authenticated }: WishlistAppProps) {
                               variant="ghost"
                               disabled={wantedIndex <= 0 || pending}
                               onClick={() =>
-                              startTransition(() => {
-                                void moveItemAction(item.id, 'up');
-                              })
-                            }
+                                startTransition(() => {
+                                  void moveItemAction(item.id, 'up');
+                                })
+                              }
                             >
                               Выше
                             </Button>
@@ -218,12 +221,12 @@ export function WishlistApp({ items, authenticated }: WishlistAppProps) {
                               type="button"
                               size="sm"
                               variant="ghost"
-                              disabled={wantedIndex === wantedItems.length - 1 || pending}
+                              disabled={wantedIndex === wantedCount - 1 || pending}
                               onClick={() =>
-                              startTransition(() => {
-                                void moveItemAction(item.id, 'down');
-                              })
-                            }
+                                startTransition(() => {
+                                  void moveItemAction(item.id, 'down');
+                                })
+                              }
                             >
                               Ниже
                             </Button>
@@ -288,7 +291,11 @@ export function WishlistApp({ items, authenticated }: WishlistAppProps) {
                 required
               />
             </div>
-            {loginError && <p className="text-sm text-destructive">{loginError}</p>}
+            {loginError && (
+              <p role="alert" className="text-sm text-destructive">
+                {loginError}
+              </p>
+            )}
             <DialogFooter>
               <Button type="submit" disabled={pending}>
                 Войти
@@ -343,14 +350,14 @@ export function WishlistApp({ items, authenticated }: WishlistAppProps) {
                 />
               </div>
               <div className="grid gap-2">
-                <Label>Валюта</Label>
+                <Label htmlFor="currency">Валюта</Label>
                 <Select
                   value={form.currency}
                   onValueChange={(value: FormState['currency']) =>
                     setForm((prev) => ({ ...prev, currency: value }))
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="currency">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -362,14 +369,14 @@ export function WishlistApp({ items, authenticated }: WishlistAppProps) {
               </div>
             </div>
             <div className="grid gap-2">
-              <Label>Статус</Label>
+              <Label htmlFor="status">Статус</Label>
               <Select
                 value={form.status}
                 onValueChange={(value: FormState['status']) =>
                   setForm((prev) => ({ ...prev, status: value }))
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger id="status">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -437,7 +444,11 @@ export function WishlistApp({ items, authenticated }: WishlistAppProps) {
               ))}
             </div>
 
-            {formError && <p className="text-sm text-destructive">{formError}</p>}
+            {formError && (
+              <p role="alert" className="text-sm text-destructive">
+                {formError}
+              </p>
+            )}
             <DialogFooter>
               <Button type="button" variant="secondary" onClick={() => setFormOpen(false)}>
                 Отмена
