@@ -20,6 +20,7 @@ npm run dev
 
 ## Deploy
 
-Push to `main` (or run the Deploy workflow from `main` only) builds and pushes `ghcr.io/<owner>/wishlist:latest` and `:sha-<commit>`, then triggers Coolify via webhook.
+- **Pull request** to `main`: lint + build only (no image push).
+- **Push** to `main` (or manual run on that branch): lint + build, then push `ghcr.io/<owner>/wishlist:latest` and `:sha-<commit>`, then Coolify webhook.
 
-Required GitHub Actions secrets: `COOLIFY_WEBHOOK`, `COOLIFY_TOKEN`. Configure application runtime environment in Coolify (not in this workflow), including a persistent volume mounted at `/data` and `SQLITE_PATH=/data/wishlist.db`.
+Required GitHub Actions secrets: `COOLIFY_WEBHOOK`, `COOLIFY_TOKEN`. Configure application runtime environment in Coolify (not in this workflow), including a persistent volume mounted at `/data` and `SQLITE_PATH=/data/wishlist.db`. If Coolify should always pull, include `force=true` in the webhook URL secret.
